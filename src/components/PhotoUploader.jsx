@@ -58,8 +58,9 @@ export default function PhotoUploader({ photos = [], onChange, maxPhotos = 2, si
       } else {
         onChange([...photos, ...newPhotos])
       }
-    } catch {
-      setError('파일 처리 중 오류가 발생했습니다.')
+    } catch (err) {
+      console.error('파일 처리 오류:', err)
+      setError(`파일 처리 중 오류가 발생했습니다: ${err?.message || '파일 형식을 확인해주세요.'}`)
     }
   }
 

@@ -54,7 +54,8 @@ export function printElement(elementId, title = '라이트하우스 소식지') 
       try {
         return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n')
       } catch {
-        return `@import url('${sheet.href}');`
+        // CORS 제한으로 외부 스타일시트 cssRules 접근 불가 시 @import로 대체
+        return sheet.href ? `@import url('${sheet.href}');` : ''
       }
     })
     .join('\n')

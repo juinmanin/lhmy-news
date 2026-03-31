@@ -72,14 +72,20 @@ export function useNewsStore() {
 
   // 현재 소식지를 목록에 저장
   const saveToList = () => {
+    // 기존 ID가 있으면 유지, 없으면 새 ID 생성
+    const id = currentNews.id || Date.now()
     const saved = {
       ...currentNews,
+      id,
       savedAt: new Date().toISOString(),
-      id: Date.now(),
     }
+
+    // currentNews에도 ID를 반영하여 다음 저장 시 업데이트로 동작하게 함
+    setCurrentNews(prev => ({ ...prev, id }))
+
     setNewsList(prev => {
       // 같은 ID가 있으면 업데이트, 없으면 추가
-      const exists = prev.findIndex(n => n.id === saved.id)
+      const exists = prev.findIndex(n => n.id === id)
       if (exists >= 0) {
         const updated = [...prev]
         updated[exists] = saved

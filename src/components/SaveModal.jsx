@@ -46,8 +46,9 @@ export default function SaveModal({ isOpen, onClose, onLocalSave, newsData }) {
       } else {
         setDriveStatus(`저장 실패: ${result.error}`)
       }
-    } catch {
-      setDriveStatus('저장 중 오류가 발생했습니다.')
+    } catch (err) {
+      console.error('Google Drive 저장 중 오류:', err)
+      setDriveStatus(`저장 중 오류가 발생했습니다: ${err?.message || '알 수 없는 오류'}`)
     } finally {
       setIsSavingDrive(false)
     }
