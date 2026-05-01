@@ -51,7 +51,7 @@ const translations = {
     'home.programs.subtitle': '난민 청소년들의 미래를 위한 다양한 교육 기회를 제공합니다',
     'home.programs.basic': '기초 교육',
     'home.programs.basic.desc': '한국어, 영어, 수학 등 기본 학습 능력 향상',
-    'home.programs.practical': '실용 기술',
+    'home.programs.practical': '실용 기술(준비중)',
     'home.programs.practical.desc': '바리스타, 제빵, 미용 등 취업 연계 기술 교육',
     'home.programs.it': 'IT 교육',
     'home.programs.it.desc': '컴퓨터 활용, 프로그래밍, 디지털 마케팅',
@@ -127,21 +127,21 @@ const translations = {
     'programs.video.date': '2024년 10월 제작',
     'programs.video.youtube': 'YouTube에서 보기',
 
-    'programs.barista.title': '바리스타 과정',
+    'programs.barista.title': '바리스타 과정(교사모집중)',
     'programs.barista.desc': '전문 바리스타 기술과 카페 운영 노하우',
     'programs.barista.feature1': '커피 추출 기술',
     'programs.barista.feature2': '라떼아트 기초',
     'programs.barista.feature3': '카페 운영 실무',
     'programs.barista.feature4': '고객 서비스',
 
-    'programs.baking.title': '제빵 과정',
+    'programs.baking.title': '제빵 과정(교사모집중)',
     'programs.baking.desc': '기초 제빵부터 전문 베이킹까지',
     'programs.baking.feature1': '기본 빵 만들기',
     'programs.baking.feature2': '케이크 데코레이션',
     'programs.baking.feature3': '재료 관리',
     'programs.baking.feature4': '위생 관리',
 
-    'programs.hair.title': '미용 과정',
+    'programs.hair.title': '미용 과정(교사모집중)',
     'programs.hair.desc': '헤어 디자인과 미용 기술 교육',
     'programs.hair.feature1': '기본 커트 기술',
     'programs.hair.feature2': '펌과 염색',
@@ -155,7 +155,7 @@ const translations = {
     'programs.nursing.feature3': '환자 소통',
     'programs.nursing.feature4': '의료진 협력',
 
-    'programs.cuisine.title': '요리 과정',
+    'programs.cuisine.title': '요리 과정(교사모집중)',
     'programs.cuisine.desc': '다양한 요리 기술과 음식 서비스',
     'programs.cuisine.feature1': '기본 요리 기술',
     'programs.cuisine.feature2': '위생 관리',
@@ -226,9 +226,9 @@ const translations = {
     'football.vision.unity.desc': '다양한 배경의 청소년들 간 우정',
 
     'football.goals.title': '프로젝트 목표',
-    'football.goals.subtitle': '2025년까지 달성하고자 하는 구체적인 목표들',
+    'football.goals.subtitle': '2026년까지 달성하고자 하는 구체적인 목표들',
     'football.goals.team': '정식 축구팀 창단',
-    'football.goals.team.desc': '20-30명 규모의 정식 청소년 축구팀을 구성하여 정기적인 훈련과 경기를 진행합니다.',
+    'football.goals.team.desc': '15명 이상 규모의 정식 청소년 축구팀을 구성하여 정기적인 훈련과 경기를 진행합니다.',
     'football.goals.health': '신체적 정신적 건강 증진',
     'football.goals.health.desc': '규칙적인 운동을 통해 체력을 기르고, 팀 활동을 통해 정신적 안정을 찾습니다.',
     'football.goals.community': '지역사회 연결',
@@ -246,7 +246,7 @@ const translations = {
 
     'football.program.title': '훈련 프로그램',
     'football.program.description': '체계적이고 전문적인 축구 훈련을 통해 선수들의 기술 향상과 인격 형성을 동시에 추구합니다.',
-    'football.program.schedule': '주 3회 정기 훈련 (화, 목, 토)',
+    'football.program.schedule': '주 2회 정기 훈련(화, 금)',
     'football.program.coaching': '전문 코치진과 자원봉사자',
     'football.program.league': '지역 리그 참가 목표',
     'football.program.support': '개별 맞춤 지원',
@@ -292,9 +292,9 @@ const translations = {
     'support.info.title': '지원 방법',
 
     'support.student.title': '교육생 신청',
-    'support.student.info': '15-25세 난민 청소년을 대상으로 한 무료 교육 프로그램에 참여하실 수 있습니다.',
+    'support.student.info': '14~17세 난민 청소년을 대상으로 한 무료 교육 프로그램에 참여하실 수 있습니다.',
     'support.student.requirements': `신청 자격:
-• 나이: 15-25세
+• 나이: 14~17세
 • 신분: 난민 또는 무국적자
 • 거주지: 말레이시아 쿠알라룸푸르 및 인근 지역
 • 학습 의지: 성실한 참여 의지
@@ -303,7 +303,7 @@ const translations = {
 • UNHCR 카드 또는 관련 서류
 • 신분증명서
 • 거주지 증명서
-• 보호자 동의서 (미성년자의 경우)
+• 보호자 동의서
 
 신청 방법:
 이메일 또는 전화로 연락 후 면담 진행`,
@@ -346,7 +346,7 @@ const translations = {
 
     'support.contact.methods': '연락 방법',
     'support.contact.hours': '운영 시간',
-    'support.contact.response': '이메일: 24시간 내 답변 | 전화: 즉시 상담 가능',
+    'support.contact.response': '월-금: 오후 2시반~5시 | 토.일: 휴무',
 
     // About page
     'about.hero.title': '등대 말레이시아 소개',
@@ -383,7 +383,8 @@ const translations = {
     'about.milestone.2024.5': 'OFPA직업학교 개교(1기 3명)',
     'about.milestone.2024.10': '2기 교육생 3명 모집',
     'about.milestone.2025.7': '암팡지역 센타 계약&인테리어',
-    'about.milestone.2025.9': '등대 말레이시아"로 오픈',
+    'about.milestone.2025.10': '등대 말레이시아 오픈',
+    'about.milestone.2025.12': '라이트하우스FC 창단',
 
     'about.team.title': '우리 팀',
     'about.team.subtitle': '헌신적인 팀원들이 함께 만들어가는 변화',
@@ -392,11 +393,11 @@ const translations = {
     'about.team.christina.role': '센터장',
     'about.team.christina.desc': '말레이시아 장기거주자, 수학.반주 전문가',
 
-    'about.team.noah.name': 'Noah Park',
+    'about.team.noah.name': 'Jimmy',
     'about.team.noah.role': '책임리더',
     'about.team.noah.desc': '해외교육경력 20년, LHMY FC담당',
 
-    'about.team.grace.name': 'Grace Bae',
+    'about.team.grace.name': 'Melony',
     'about.team.grace.role': '총무',
     'about.team.grace.desc': '영어.간호보건 교육, 회원관리담당',
 
@@ -430,6 +431,9 @@ const translations = {
     'contact.email.address': 'lhmy.kr@gmail.com',
 
     'contact.hours.title': '운영 시간',
+    'contact.hours.weekdays': '월.화.목.금: 오후2시~오후5시',
+    'contact.hours.field': '화.금: 오후5시반~오후7시(운동장)',
+    'contact.hours.closed': '토.일: 휴무',
 
     'contact.location.title': '찾아오시는 길',
     'contact.location.subtitle': '대중교통이나 자가용으로 쉽게 오실 수 있습니다',
@@ -547,7 +551,7 @@ const translations = {
     'home.programs.subtitle': 'Diverse educational opportunities for the future of refugee youth',
     'home.programs.basic': 'Basic Education',
     'home.programs.basic.desc': 'Korean, English, Math and fundamental learning skills',
-    'home.programs.practical': 'Practical Skills',
+    'home.programs.practical': 'Practical Skills (Preparing)',
     'home.programs.practical.desc': 'Job-linked technical education like barista, baking, beauty',
     'home.programs.it': 'IT Education',
     'home.programs.it.desc': 'Computer skills, programming, digital marketing',
@@ -623,21 +627,21 @@ const translations = {
     'programs.video.date': 'Produced in October 2024',
     'programs.video.youtube': 'Watch on YouTube',
 
-    'programs.barista.title': 'Barista Course',
+    'programs.barista.title': 'Barista Course (Teacher Recruiting)',
     'programs.barista.desc': 'Professional barista skills and cafe management know-how',
     'programs.barista.feature1': 'Coffee extraction techniques',
     'programs.barista.feature2': 'Basic latte art',
     'programs.barista.feature3': 'Cafe operation practice',
     'programs.barista.feature4': 'Customer service',
 
-    'programs.baking.title': 'Baking Course',
+    'programs.baking.title': 'Baking Course (Teacher Recruiting)',
     'programs.baking.desc': 'From basic baking to professional baking',
     'programs.baking.feature1': 'Basic bread making',
     'programs.baking.feature2': 'Cake decoration',
     'programs.baking.feature3': 'Ingredient management',
     'programs.baking.feature4': 'Hygiene management',
 
-    'programs.hair.title': 'Beauty Course',
+    'programs.hair.title': 'Beauty Course (Teacher Recruiting)',
     'programs.hair.desc': 'Hair design and beauty skills education',
     'programs.hair.feature1': 'Basic cutting techniques',
     'programs.hair.feature2': 'Perming and coloring',
@@ -651,7 +655,7 @@ const translations = {
     'programs.nursing.feature3': 'Patient communication',
     'programs.nursing.feature4': 'Medical team cooperation',
 
-    'programs.cuisine.title': 'Cooking Course',
+    'programs.cuisine.title': 'Cooking Course (Teacher Recruiting)',
     'programs.cuisine.desc': 'Various cooking skills and food service',
     'programs.cuisine.feature1': 'Basic cooking skills',
     'programs.cuisine.feature2': 'Hygiene management',
@@ -722,9 +726,9 @@ const translations = {
     'football.vision.unity.desc': 'Friendship among youth from diverse backgrounds',
 
     'football.goals.title': 'Project Goals',
-    'football.goals.subtitle': 'Specific goals to achieve by 2025',
+    'football.goals.subtitle': 'Specific goals to achieve by 2026',
     'football.goals.team': 'Official Football Team Formation',
-    'football.goals.team.desc': 'Form an official youth football team of 20-30 members for regular training and matches.',
+    'football.goals.team.desc': 'Form an official youth football team of 15+ members for regular training and matches.',
     'football.goals.health': 'Physical and Mental Health Improvement',
     'football.goals.health.desc': 'Build physical strength through regular exercise and find mental stability through team activities.',
     'football.goals.community': 'Community Connection',
@@ -742,7 +746,7 @@ const translations = {
 
     'football.program.title': 'Training Program',
     'football.program.description': 'Through systematic and professional football training, we pursue both skill improvement and character development of players.',
-    'football.program.schedule': 'Regular training 3 times a week (Tue, Thu, Sat)',
+    'football.program.schedule': 'Regular training 2 times a week (Tue, Fri)',
     'football.program.coaching': 'Professional coaches and volunteers',
     'football.program.league': 'Goal to participate in local league',
     'football.program.support': 'Individual customized support',
@@ -788,9 +792,9 @@ const translations = {
     'support.info.title': 'Support Methods',
 
     'support.student.title': 'Student Application',
-    'support.student.info': 'Refugee youth aged 15-25 can participate in free educational programs.',
+    'support.student.info': 'Refugee youth aged 14-17 can participate in free educational programs.',
     'support.student.requirements': `Eligibility:
-• Age: 15-25 years old
+• Age: 14-17 years old
 • Status: Refugee or stateless person
 • Residence: Kuala Lumpur and nearby areas, Malaysia
 • Learning motivation: Sincere participation
@@ -799,7 +803,7 @@ Required documents:
 • UNHCR card or related documents
 • Identity documents
 • Proof of residence
-• Guardian consent (for minors)
+• Guardian consent
 
 Application method:
 Contact by email or phone, then proceed with interview`,
@@ -842,7 +846,7 @@ Submit partnership proposal by email`,
 
     'support.contact.methods': 'Contact Methods',
     'support.contact.hours': 'Operating Hours',
-    'support.contact.response': 'Email: Response within 24 hours | Phone: Immediate consultation available',
+    'support.contact.response': 'Mon-Fri: 2:30 PM-5 PM | Sat.Sun: Closed',
 
     // About page
     'about.hero.title': 'About Lighthouse Malaysia',
@@ -879,7 +883,8 @@ Submit partnership proposal by email`,
     'about.milestone.2024.5': 'Opened OFPA Vocational School (1st batch, 3 students)',
     'about.milestone.2024.10': 'Recruited 3 students for 2nd batch',
     'about.milestone.2025.7': 'Signed contract & renovation for Ampang center',
-    'about.milestone.2025.9': 'Opened as "Lighthouse Malaysia"',
+    'about.milestone.2025.10': 'Lighthouse Malaysia opened',
+    'about.milestone.2025.12': 'Lighthouse FC founded',
 
     'about.team.title': 'Our Team',
     'about.team.subtitle': 'Changes created together by dedicated team members',
@@ -888,11 +893,11 @@ Submit partnership proposal by email`,
     'about.team.christina.role': 'Center Director',
     'about.team.christina.desc': 'Long-term Malaysia resident, Math & Accompaniment specialist',
 
-    'about.team.noah.name': 'Noah Park',
+    'about.team.noah.name': 'Jimmy',
     'about.team.noah.role': 'Lead Manager',
     'about.team.noah.desc': '20 years overseas education experience, LHMY FC manager',
 
-    'about.team.grace.name': 'Grace Bae',
+    'about.team.grace.name': 'Melony',
     'about.team.grace.role': 'General Affairs',
     'about.team.grace.desc': 'English & Nursing education, Member management',
 
@@ -926,6 +931,9 @@ Submit partnership proposal by email`,
     'contact.email.address': 'lhmy.kr@gmail.com',
 
     'contact.hours.title': 'Operating Hours',
+    'contact.hours.weekdays': 'Mon.Tue.Thu.Fri: 2 PM-5 PM',
+    'contact.hours.field': 'Tue.Fri: 5:30 PM-7 PM (field)',
+    'contact.hours.closed': 'Sat.Sun: Closed',
 
     'contact.location.title': 'Directions',
     'contact.location.subtitle': 'Easy access by public transport or car',
@@ -1043,7 +1051,7 @@ Optional information:
     'home.programs.subtitle': 'Peluang pendidikan yang pelbagai untuk masa depan belia pelarian',
     'home.programs.basic': 'Pendidikan Asas',
     'home.programs.basic.desc': 'Korea, Inggeris, Matematik dan kemahiran pembelajaran asas',
-    'home.programs.practical': 'Kemahiran Praktikal',
+    'home.programs.practical': 'Kemahiran Praktikal (Dalam Persediaan)',
     'home.programs.practical.desc': 'Pendidikan teknikal berkaitan pekerjaan seperti barista, pembakaran, kecantikan',
     'home.programs.it': 'Pendidikan IT',
     'home.programs.it.desc': 'Kemahiran komputer, pengaturcaraan, pemasaran digital',
@@ -1119,21 +1127,21 @@ Optional information:
     'programs.video.date': 'Dihasilkan pada Oktober 2024',
     'programs.video.youtube': 'Tonton di YouTube',
 
-    'programs.barista.title': 'Kursus Barista',
+    'programs.barista.title': 'Kursus Barista (Mencari Guru)',
     'programs.barista.desc': 'Kemahiran barista profesional dan pengetahuan pengurusan kafe',
     'programs.barista.feature1': 'Teknik pengekstrakan kopi',
     'programs.barista.feature2': 'Seni latte asas',
     'programs.barista.feature3': 'Amalan operasi kafe',
     'programs.barista.feature4': 'Perkhidmatan pelanggan',
 
-    'programs.baking.title': 'Kursus Pembakaran',
+    'programs.baking.title': 'Kursus Pembakaran (Mencari Guru)',
     'programs.baking.desc': 'Dari pembakaran asas hingga pembakaran profesional',
     'programs.baking.feature1': 'Pembuatan roti asas',
     'programs.baking.feature2': 'Hiasan kek',
     'programs.baking.feature3': 'Pengurusan bahan',
     'programs.baking.feature4': 'Pengurusan kebersihan',
 
-    'programs.hair.title': 'Kursus Kecantikan',
+    'programs.hair.title': 'Kursus Kecantikan (Mencari Guru)',
     'programs.hair.desc': 'Pendidikan reka bentuk rambut dan kemahiran kecantikan',
     'programs.hair.feature1': 'Teknik potong asas',
     'programs.hair.feature2': 'Keriting dan pewarnaan',
@@ -1147,7 +1155,7 @@ Optional information:
     'programs.nursing.feature3': 'Komunikasi pesakit',
     'programs.nursing.feature4': 'Kerjasama pasukan perubatan',
 
-    'programs.cuisine.title': 'Kursus Masakan',
+    'programs.cuisine.title': 'Kursus Masakan (Mencari Guru)',
     'programs.cuisine.desc': 'Pelbagai kemahiran masakan dan perkhidmatan makanan',
     'programs.cuisine.feature1': 'Kemahiran masakan asas',
     'programs.cuisine.feature2': 'Pengurusan kebersihan',
@@ -1218,9 +1226,9 @@ Optional information:
     'football.vision.unity.desc': 'Persahabatan antara belia dari latar belakang yang pelbagai',
 
     'football.goals.title': 'Matlamat Projek',
-    'football.goals.subtitle': 'Matlamat khusus untuk dicapai menjelang 2025',
+    'football.goals.subtitle': 'Matlamat khusus untuk dicapai menjelang 2026',
     'football.goals.team': 'Pembentukan Pasukan Bola Sepak Rasmi',
-    'football.goals.team.desc': 'Membentuk pasukan bola sepak belia rasmi sebanyak 20-30 ahli untuk latihan dan perlawanan tetap.',
+    'football.goals.team.desc': 'Membentuk pasukan bola sepak belia rasmi sebanyak 15+ ahli untuk latihan dan perlawanan tetap.',
     'football.goals.health': 'Peningkatan Kesihatan Fizikal dan Mental',
     'football.goals.health.desc': 'Membina kekuatan fizikal melalui senaman tetap dan mencari kestabilan mental melalui aktiviti berpasukan.',
     'football.goals.community': 'Hubungan Komuniti',
@@ -1238,7 +1246,7 @@ Optional information:
 
     'football.program.title': 'Program Latihan',
     'football.program.description': 'Melalui latihan bola sepak yang sistematik dan profesional, kami mengejar peningkatan kemahiran dan pembentukan karakter pemain secara serentak.',
-    'football.program.schedule': 'Latihan tetap 3 kali seminggu (Selasa, Khamis, Sabtu)',
+    'football.program.schedule': 'Latihan tetap 2 kali seminggu (Selasa, Jumaat)',
     'football.program.coaching': 'Jurulatih profesional dan sukarelawan',
     'football.program.league': 'Matlamat untuk menyertai liga tempatan',
     'football.program.support': 'Sokongan disesuaikan individu',
@@ -1284,9 +1292,9 @@ Optional information:
     'support.info.title': 'Kaedah Sokongan',
 
     'support.student.title': 'Permohonan Pelajar',
-    'support.student.info': 'Belia pelarian berumur 15-25 tahun boleh menyertai program pendidikan percuma.',
+    'support.student.info': 'Belia pelarian berumur 14-17 tahun boleh menyertai program pendidikan percuma.',
     'support.student.requirements': `Kelayakan:
-• Umur: 15-25 tahun
+• Umur: 14-17 tahun
 • Status: Pelarian atau tidak berkewarganegaraan
 • Kediaman: Kuala Lumpur dan kawasan berhampiran, Malaysia
 • Motivasi pembelajaran: Niat penyertaan yang ikhlas
@@ -1295,7 +1303,7 @@ Dokumen yang diperlukan:
 • Kad UNHCR atau dokumen berkaitan
 • Dokumen pengenalan
 • Bukti kediaman
-• Persetujuan penjaga (untuk di bawah umur)
+• Persetujuan penjaga
 
 Kaedah permohonan:
 Hubungi melalui emel atau telefon, kemudian teruskan dengan temu duga`,
@@ -1338,7 +1346,7 @@ Hantar cadangan perkongsian melalui emel`,
 
     'support.contact.methods': 'Kaedah Hubungan',
     'support.contact.hours': 'Waktu Operasi',
-    'support.contact.response': 'Emel: Respons dalam 24 jam | Telefon: Perundingan segera tersedia',
+    'support.contact.response': 'Isnin-Jumaat: 2:30 PTG-5 PTG | Sabtu.Ahad: Tutup',
 
     // About page
     'about.hero.title': 'Tentang Lighthouse Malaysia',
@@ -1375,7 +1383,8 @@ Hantar cadangan perkongsian melalui emel`,
     'about.milestone.2024.5': 'Membuka Sekolah Vokasional OFPA (kumpulan pertama, 3 pelajar)',
     'about.milestone.2024.10': 'Mengambil 3 pelajar untuk kumpulan kedua',
     'about.milestone.2025.7': 'Menandatangani kontrak & pengubahsuaian pusat di Ampang',
-    'about.milestone.2025.9': 'Dibuka sebagai "Lighthouse Malaysia"',
+    'about.milestone.2025.10': 'Lighthouse Malaysia dibuka',
+    'about.milestone.2025.12': 'Lighthouse FC ditubuhkan',
 
     'about.team.title': 'Pasukan Kami',
     'about.team.subtitle': 'Perubahan yang dicipta bersama oleh ahli pasukan yang berdedikasi',
@@ -1384,11 +1393,11 @@ Hantar cadangan perkongsian melalui emel`,
     'about.team.christina.role': 'Pengarah Pusat',
     'about.team.christina.desc': 'Penduduk jangka panjang Malaysia, pakar Matematik & Iringan',
 
-    'about.team.noah.name': 'Noah Park',
+    'about.team.noah.name': 'Jimmy',
     'about.team.noah.role': 'Pengurus Utama',
     'about.team.noah.desc': '20 tahun pengalaman pendidikan luar negara, pengurus LHMY FC',
 
-    'about.team.grace.name': 'Grace Bae',
+    'about.team.grace.name': 'Melony',
     'about.team.grace.role': 'Hal Ehwal Am',
     'about.team.grace.desc': 'Pendidikan Inggeris & Kejururawatan, Pengurusan ahli',
 
@@ -1422,6 +1431,9 @@ Hantar cadangan perkongsian melalui emel`,
     'contact.email.address': 'lhmy.kr@gmail.com',
 
     'contact.hours.title': 'Waktu Operasi',
+    'contact.hours.weekdays': 'Isnin.Selasa.Khamis.Jumaat: 2 PTG-5 PTG',
+    'contact.hours.field': 'Selasa.Jumaat: 5:30 PTG-7 PTG (padang)',
+    'contact.hours.closed': 'Sabtu.Ahad: Tutup',
 
     'contact.location.title': 'Arah',
     'contact.location.subtitle': 'Akses mudah dengan pengangkutan awam atau kereta',

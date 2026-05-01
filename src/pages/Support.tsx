@@ -134,9 +134,8 @@ const Support: React.FC = () => {
                   55100 Kuala Lumpur, Selangor, Malaysia
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                  <p><strong>월-금:</strong> 오전 9시 - 오후 6시</p>
-                  <p><strong>토:</strong> 오전 9시 - 오후 2시</p>
-                  <p><strong>일:</strong> 휴무</p>
+                  <p><strong>월-금:</strong> 오후 2시반 - 5시</p>
+                  <p><strong>토.일:</strong> 휴무</p>
                 </div>
               </div>
             </div>

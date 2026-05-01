@@ -56,9 +56,9 @@ const Home: React.FC = () => {
   const heroBackgroundImage = heroSection?.image_url || '/image.png';
 
   const stats = [
-    { number: '50+', labelKey: 'home.stats.students', icon: GraduationCap },
-    { number: '8', labelKey: 'home.stats.programs', icon: BookOpen },
-    { number: '15+', labelKey: 'home.stats.volunteers', icon: Users },
+    { number: '37+', labelKey: 'home.stats.students', icon: GraduationCap },
+    { number: '5', labelKey: 'home.stats.programs', icon: BookOpen },
+    { number: '8+', labelKey: 'home.stats.volunteers', icon: Users },
     { number: '2', labelKey: 'home.stats.years', icon: Star },
   ];
 

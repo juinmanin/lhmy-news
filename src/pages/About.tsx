@@ -11,7 +11,8 @@ const About: React.FC = () => {
     { year: '2024.5', eventKey: 'about.milestone.2024.5' },
     { year: '2024.10', eventKey: 'about.milestone.2024.10' },
     { year: '2025.7', eventKey: 'about.milestone.2025.7' },
-    { year: '2025.9', eventKey: 'about.milestone.2025.9' },
+    { year: '2025.10', eventKey: 'about.milestone.2025.10' },
+    { year: '2025.12', eventKey: 'about.milestone.2025.12' },
   ];
 
   const team = [
@@ -25,7 +26,7 @@ const About: React.FC = () => {
       emoji: '👩'
     },
     {
-      name: 'Noah Park',
+      name: 'Jimmy',
       nameKey: 'about.team.noah.name',
       role: '책임리더',
       roleKey: 'about.team.noah.role',
@@ -34,7 +35,7 @@ const About: React.FC = () => {
       emoji: '👨'
     },
     {
-      name: 'Grace Bae',
+      name: 'Melony',
       nameKey: 'about.team.grace.name',
       role: '총무',
       roleKey: 'about.team.grace.role',

@@ -6,7 +6,7 @@ const Football: React.FC = () => {
   const { t } = useLanguage();
 
   const impactStats = [
-    { icon: Users, number: '20-30', labelKey: 'football.stats.players' },
+    { icon: Users, number: '15+', labelKey: 'football.stats.players' },
     { icon: Heart, number: '200,000+', labelKey: 'football.stats.refugees' },
     { icon: Star, number: '10,000+', labelKey: 'football.stats.youth' },
     { icon: Target, number: '2025', labelKey: 'football.stats.founded' },
