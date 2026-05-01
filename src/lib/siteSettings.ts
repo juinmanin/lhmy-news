@@ -108,7 +108,7 @@ export const defaultSiteSettings: SiteSettings = {
   team: [
     {
       id: 'christina',
-      name: 'Christina Kim',
+      name: 'Christina',
       role: '센터장',
       description: '말레이시아 장기거주자, 수학.반주 전문가',
       emoji: '👩',
@@ -129,14 +129,14 @@ export const defaultSiteSettings: SiteSettings = {
     },
     {
       id: 'paul',
-      name: 'Paul Cho',
+      name: 'Paul',
       role: 'IT팀장',
       description: '컴퓨터.AI.마케팅 교육, 홈페이지관리담당',
       emoji: '👨‍💻',
     },
     {
       id: 'sema',
-      name: 'Sema Kim',
+      name: 'Sema',
       role: '관리팀장',
       description: '한국어 교육, 집기.문서관리담당',
       emoji: '👩',
@@ -154,6 +154,16 @@ type SettingsRecord = Partial<{
   team: TeamMemberSetting[];
 }>;
 
+function normalizeTeamName(name: string) {
+  const replacements: Record<string, string> = {
+    'Christina Kim': 'Christina',
+    'Paul Cho': 'Paul',
+    'Sema Kim': 'Sema',
+  };
+
+  return replacements[name] || name;
+}
+
 export function mergeSiteSettings(settings?: SettingsRecord | null): SiteSettings {
   return {
     homeStats: { ...defaultSiteSettings.homeStats, ...(settings?.homeStats || {}) },
@@ -162,7 +172,9 @@ export function mergeSiteSettings(settings?: SettingsRecord | null): SiteSetting
     support: { ...defaultSiteSettings.support, ...(settings?.support || {}) },
     contact: { ...defaultSiteSettings.contact, ...(settings?.contact || {}) },
     milestones: settings?.milestones?.length ? settings.milestones : defaultSiteSettings.milestones,
-    team: settings?.team?.length ? settings.team : defaultSiteSettings.team,
+    team: settings?.team?.length
+      ? settings.team.map((member) => ({ ...member, name: normalizeTeamName(member.name) }))
+      : defaultSiteSettings.team,
   };
 }
 

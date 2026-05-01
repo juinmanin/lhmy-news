@@ -32,7 +32,7 @@ const translations = {
     // Home page
     'home.hero.title': '등대 말레이시아',
     'home.hero.subtitle': '난민 청소년을 위한 희망의 등대',
-    'home.hero.description': '말레이시아의 난민 청소년들에게 교육과 직업훈련을 통해 새로운 희망과 미래를 제공합니다.',
+    'home.hero.description': '말레이시아 난민 청소년에게 축구, 한글, 영어, 컴퓨터, 피아노\n그리고 미래를 향한 길을 제공합니다.',
     'home.hero.programs': '교육 프로그램 보기',
     'home.hero.support': '지원하기',
 
@@ -209,7 +209,7 @@ const translations = {
     'football.stats.players': '현재 선수',
     'football.stats.refugees': '말레이시아 난민',
     'football.stats.youth': '청소년 난민',
-    'football.stats.founded': '설립 예정',
+    'football.stats.founded': '설립 연도',
 
     'football.impact.title': '우리의 영향력',
     'football.impact.subtitle': '축구를 통해 만들어가는 긍정적인 변화',
@@ -389,7 +389,7 @@ const translations = {
     'about.team.title': '우리 팀',
     'about.team.subtitle': '헌신적인 팀원들이 함께 만들어가는 변화',
 
-    'about.team.christina.name': 'Christina Kim',
+    'about.team.christina.name': 'Christina',
     'about.team.christina.role': '센터장',
     'about.team.christina.desc': '말레이시아 장기거주자, 수학.반주 전문가',
 
@@ -401,11 +401,11 @@ const translations = {
     'about.team.grace.role': '총무',
     'about.team.grace.desc': '영어.간호보건 교육, 회원관리담당',
 
-    'about.team.paul.name': 'Paul Cho',
+    'about.team.paul.name': 'Paul',
     'about.team.paul.role': 'IT팀장',
     'about.team.paul.desc': '컴퓨터.AI.마케팅 교육, 홈페이지관리담당',
 
-    'about.team.sema.name': 'Sema Kim',
+    'about.team.sema.name': 'Sema',
     'about.team.sema.role': '관리팀장',
     'about.team.sema.desc': '한국어 교육, 집기.문서관리담당',
 
@@ -709,7 +709,7 @@ const translations = {
     'football.stats.players': 'Current Players',
     'football.stats.refugees': 'Refugees in Malaysia',
     'football.stats.youth': 'Youth Refugees',
-    'football.stats.founded': 'To be Founded',
+    'football.stats.founded': 'Founded',
 
     'football.impact.title': 'Our Impact',
     'football.impact.subtitle': 'Positive changes created through football',
@@ -889,7 +889,7 @@ Submit partnership proposal by email`,
     'about.team.title': 'Our Team',
     'about.team.subtitle': 'Changes created together by dedicated team members',
 
-    'about.team.christina.name': 'Christina Kim',
+    'about.team.christina.name': 'Christina',
     'about.team.christina.role': 'Center Director',
     'about.team.christina.desc': 'Long-term Malaysia resident, Math & Accompaniment specialist',
 
@@ -901,11 +901,11 @@ Submit partnership proposal by email`,
     'about.team.grace.role': 'General Affairs',
     'about.team.grace.desc': 'English & Nursing education, Member management',
 
-    'about.team.paul.name': 'Paul Cho',
+    'about.team.paul.name': 'Paul',
     'about.team.paul.role': 'IT Team Leader',
     'about.team.paul.desc': 'Computer, AI, Marketing education, Website management',
 
-    'about.team.sema.name': 'Sema Kim',
+    'about.team.sema.name': 'Sema',
     'about.team.sema.role': 'Management Team Leader',
     'about.team.sema.desc': 'Korean education, Equipment & Document management',
 
@@ -1209,7 +1209,7 @@ Optional information:
     'football.stats.players': 'Pemain Semasa',
     'football.stats.refugees': 'Pelarian di Malaysia',
     'football.stats.youth': 'Belia Pelarian',
-    'football.stats.founded': 'Akan Ditubuhkan',
+    'football.stats.founded': 'Tahun Ditubuhkan',
 
     'football.impact.title': 'Impak Kami',
     'football.impact.subtitle': 'Perubahan positif yang dicipta melalui bola sepak',
@@ -1389,7 +1389,7 @@ Hantar cadangan perkongsian melalui emel`,
     'about.team.title': 'Pasukan Kami',
     'about.team.subtitle': 'Perubahan yang dicipta bersama oleh ahli pasukan yang berdedikasi',
 
-    'about.team.christina.name': 'Christina Kim',
+    'about.team.christina.name': 'Christina',
     'about.team.christina.role': 'Pengarah Pusat',
     'about.team.christina.desc': 'Penduduk jangka panjang Malaysia, pakar Matematik & Iringan',
 
@@ -1401,11 +1401,11 @@ Hantar cadangan perkongsian melalui emel`,
     'about.team.grace.role': 'Hal Ehwal Am',
     'about.team.grace.desc': 'Pendidikan Inggeris & Kejururawatan, Pengurusan ahli',
 
-    'about.team.paul.name': 'Paul Cho',
+    'about.team.paul.name': 'Paul',
     'about.team.paul.role': 'Ketua Pasukan IT',
     'about.team.paul.desc': 'Pendidikan Komputer, AI, Pemasaran, Pengurusan laman web',
 
-    'about.team.sema.name': 'Sema Kim',
+    'about.team.sema.name': 'Sema',
     'about.team.sema.role': 'Ketua Pasukan Pengurusan',
     'about.team.sema.desc': 'Pendidikan Korea, Pengurusan peralatan & dokumen',
 

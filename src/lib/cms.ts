@@ -94,7 +94,7 @@ function seedSections(): SiteSection[] {
       id: 'home-hero-ko',
       section_key: 'home.hero',
       title: '등대 말레이시아',
-      body: '말레이시아 난민 청소년에게 교육과 공동체, 그리고 미래를 향한 길을 제공합니다.',
+      body: '말레이시아 난민 청소년에게 축구, 한글, 영어, 컴퓨터, 피아노\n그리고 미래를 향한 길을 제공합니다.',
       locale: 'ko',
       updated_at: nowIso(),
     },

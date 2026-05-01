@@ -119,7 +119,7 @@ const Home: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-100">
               {heroSubtitleSection?.title || heroSubtitleSection?.body || t('home.hero.subtitle')}
             </h2>
-            <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">
               {heroSection?.body || t('home.hero.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
