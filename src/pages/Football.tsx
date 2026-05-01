@@ -1,15 +1,18 @@
 import React from 'react';
 import { Trophy, Users, Calendar, Star, Target, Heart, Shield, Globe, Lightbulb, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const Football: React.FC = () => {
   const { t } = useLanguage();
+  const settings = useSiteSettings();
+  const goalsSubtitle = `${settings.football.goalsTargetYear}년까지 달성하고자 하는 구체적인 목표들`;
 
   const impactStats = [
-    { icon: Users, number: '15+', labelKey: 'football.stats.players' },
+    { icon: Users, number: settings.football.currentPlayers, labelKey: 'football.stats.players' },
     { icon: Heart, number: '200,000+', labelKey: 'football.stats.refugees' },
     { icon: Star, number: '10,000+', labelKey: 'football.stats.youth' },
-    { icon: Target, number: '2025', labelKey: 'football.stats.founded' },
+    { icon: Target, number: settings.football.foundedYear, labelKey: 'football.stats.founded' },
   ];
 
   const visionPoints = [
@@ -39,6 +42,7 @@ const Football: React.FC = () => {
     {
       titleKey: 'football.goals.team',
       descKey: 'football.goals.team.desc',
+      desc: `${settings.football.currentPlayers} 규모의 정식 청소년 축구팀을 구성하여 정기적인 훈련과 경기를 진행합니다.`,
       icon: Users
     },
     {
@@ -192,7 +196,7 @@ const Football: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-6">
               {t('football.goals.title')}
             </h2>
-            <p className="text-xl text-gray-600">{t('football.goals.subtitle')}</p>
+            <p className="text-xl text-gray-600">{goalsSubtitle || t('football.goals.subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -204,7 +208,7 @@ const Football: React.FC = () => {
                   </div>
                   <h3 className="text-xl font-semibold text-green-800">{t(goal.titleKey)}</h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed">{t(goal.descKey)}</p>
+                <p className="text-gray-700 leading-relaxed">{goal.desc || t(goal.descKey)}</p>
               </div>
             ))}
           </div>
@@ -248,7 +252,7 @@ const Football: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Calendar className="h-6 w-6 text-green-600" />
-                  <span className="text-gray-700">{t('football.program.schedule')}</span>
+                  <span className="text-gray-700">{settings.football.trainingSchedule || t('football.program.schedule')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Users className="h-6 w-6 text-green-600" />

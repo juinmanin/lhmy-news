@@ -2,6 +2,7 @@ import React from 'react';
 import { BookOpen, Coffee, Music, Users, Clock, Award, Target, Calculator, Monitor, Play } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 // Custom Korean text icon component
 const KoreanIcon = ({ className }: { className?: string }) => (
@@ -21,6 +22,7 @@ type ProgramIcon = LucideIcon | React.FC<{ className?: string }>;
 
 interface ProgramItem {
   titleKey: string;
+  title?: string;
   descKey: string;
   duration: string;
   durationKey?: string;
@@ -32,6 +34,7 @@ interface ProgramItem {
 
 const Programs: React.FC = () => {
   const { t } = useLanguage();
+  const settings = useSiteSettings();
   const [showVideo, setShowVideo] = React.useState(false);
 
   const academicPrograms = [
@@ -100,6 +103,7 @@ const Programs: React.FC = () => {
   const vocationalPrograms = [
     {
       titleKey: 'programs.barista.title',
+      title: settings.programs.barista,
       descKey: 'programs.barista.desc',
       duration: '3개월',
       durationKey: 'programs.duration.3months',
@@ -115,6 +119,7 @@ const Programs: React.FC = () => {
     },
     {
       titleKey: 'programs.baking.title',
+      title: settings.programs.baking,
       descKey: 'programs.baking.desc',
       duration: '4개월',
       durationKey: 'programs.duration.4months',
@@ -130,6 +135,7 @@ const Programs: React.FC = () => {
     },
     {
       titleKey: 'programs.hair.title',
+      title: settings.programs.hair,
       descKey: 'programs.hair.desc',
       duration: '3개월',
       durationKey: 'programs.duration.3months',
@@ -160,6 +166,7 @@ const Programs: React.FC = () => {
     },
     {
       titleKey: 'programs.cuisine.title',
+      title: settings.programs.cuisine,
       descKey: 'programs.cuisine.desc',
       duration: '3개월',
       durationKey: 'programs.duration.3months',
@@ -237,7 +244,7 @@ const Programs: React.FC = () => {
       </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold text-blue-800 mb-2">
-          {t(program.titleKey)}
+          {program.title || t(program.titleKey)}
         </h3>
         <p className="text-gray-600 mb-4">
           {t(program.descKey)}

@@ -1,94 +1,37 @@
 import React from 'react';
 import { Heart, Users, Target, Award, Lightbulb, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const About: React.FC = () => {
   const { t } = useLanguage();
-
-  const milestones = [
-    { year: '2022.10', eventKey: 'about.milestone.2022.10' },
-    { year: '2023.3', eventKey: 'about.milestone.2023.3' },
-    { year: '2024.5', eventKey: 'about.milestone.2024.5' },
-    { year: '2024.10', eventKey: 'about.milestone.2024.10' },
-    { year: '2025.7', eventKey: 'about.milestone.2025.7' },
-    { year: '2025.10', eventKey: 'about.milestone.2025.10' },
-    { year: '2025.12', eventKey: 'about.milestone.2025.12' },
-  ];
-
-  const team = [
-    {
-      name: 'Christina Kim',
-      nameKey: 'about.team.christina.name',
-      role: '센터장',
-      roleKey: 'about.team.christina.role',
-      description: '말레이시아 장기거주자, 수학.반주 전문가',
-      descKey: 'about.team.christina.desc',
-      emoji: '👩'
-    },
-    {
-      name: 'Jimmy',
-      nameKey: 'about.team.noah.name',
-      role: '책임리더',
-      roleKey: 'about.team.noah.role',
-      description: '해외교육경력 20년, LHMY FC담당',
-      descKey: 'about.team.noah.desc',
-      emoji: '👨'
-    },
-    {
-      name: 'Melony',
-      nameKey: 'about.team.grace.name',
-      role: '총무',
-      roleKey: 'about.team.grace.role',
-      description: '영어.간호보건 교육, 회원관리담당',
-      descKey: 'about.team.grace.desc',
-      emoji: '👩'
-    },
-    {
-      name: 'Paul Cho',
-      nameKey: 'about.team.paul.name',
-      role: 'IT팀장',
-      roleKey: 'about.team.paul.role',
-      description: '컴퓨터.AI.마케팅 교육, 홈페이지관리담당',
-      descKey: 'about.team.paul.desc',
-      emoji: '👨‍💻'
-    },
-    {
-      name: 'Sema Kim',
-      nameKey: 'about.team.sema.name',
-      role: '관리팀장',
-      roleKey: 'about.team.sema.role',
-      description: '한국어 교육, 집기.문서관리담당',
-      descKey: 'about.team.sema.desc',
-      emoji: '👩'
-    }
-  ];
+  const settings = useSiteSettings();
 
   const values = [
     {
       icon: Heart,
       titleKey: 'about.values.love',
-      descKey: 'about.values.love.desc'
+      descKey: 'about.values.love.desc',
     },
     {
       icon: Target,
       titleKey: 'about.values.practical',
-      descKey: 'about.values.practical.desc'
+      descKey: 'about.values.practical.desc',
     },
     {
       icon: Users,
       titleKey: 'about.values.inclusion',
-      descKey: 'about.values.inclusion.desc'
+      descKey: 'about.values.inclusion.desc',
     },
     {
       icon: Lightbulb,
       titleKey: 'about.values.innovation',
-      descKey: 'about.values.innovation.desc'
-    }
+      descKey: 'about.values.innovation.desc',
+    },
   ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('about.hero.title')}</h1>
@@ -98,7 +41,6 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Mission & Vision */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -136,7 +78,6 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Vision */}
       <section className="py-20 bg-gradient-to-r from-blue-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -171,7 +112,6 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Our Values */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -192,7 +132,6 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Timeline */}
       <section className="py-20 bg-gradient-to-r from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -201,14 +140,14 @@ const About: React.FC = () => {
           </div>
           <div className="relative">
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200"></div>
-            {milestones.map((milestone, index) => (
-              <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+            {settings.milestones.map((milestone, index) => (
+              <div key={milestone.id} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                 <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
                   <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
                     <span className="inline-block bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
                       {milestone.year}
                     </span>
-                    <p className="text-gray-700 leading-relaxed">{t(milestone.eventKey)}</p>
+                    <p className="text-gray-700 leading-relaxed">{milestone.title}</p>
                   </div>
                 </div>
                 <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-500 rounded-full border-4 border-white shadow-lg"></div>
@@ -218,7 +157,6 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Team */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -226,29 +164,22 @@ const About: React.FC = () => {
             <p className="text-xl text-gray-600">{t('about.team.subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {team.map((member, index) => (
-              <div key={index} className="text-center group">
+            {settings.team.map((member) => (
+              <div key={member.id} className="text-center group">
                 <div className="relative mb-6">
                   <div className="w-24 h-24 rounded-full mx-auto shadow-lg group-hover:shadow-xl transition-all duration-200 border-4 border-white bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-4xl">
                     {member.emoji}
                   </div>
                 </div>
-                <h3 className="text-base font-semibold text-blue-800 mb-2">
-                  {member.nameKey ? t(member.nameKey) : member.name}
-                </h3>
-                <p className="text-amber-600 font-medium mb-2 text-xs">
-                  {member.roleKey ? t(member.roleKey) : member.role}
-                </p>
-                <p className="text-gray-600 text-xs leading-relaxed">
-                  {member.descKey ? t(member.descKey) : member.description}
-                </p>
+                <h3 className="text-base font-semibold text-blue-800 mb-2">{member.name}</h3>
+                <p className="text-amber-600 font-medium mb-2 text-xs">{member.role}</p>
+                <p className="text-gray-600 text-xs leading-relaxed">{member.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact CTA */}
       <section className="py-20 bg-gradient-to-r from-blue-800 to-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-6">{t('about.cta.title')}</h2>

@@ -1,9 +1,11 @@
 import React from 'react';
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const Contact: React.FC = () => {
   const { t } = useLanguage();
+  const settings = useSiteSettings();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,9 +76,9 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="text-xl font-semibold text-blue-800 mb-2">{t('contact.hours.title')}</h3>
                     <div className="text-gray-600 space-y-1">
-                      <p>{t('contact.hours.weekdays')}</p>
-                      <p>{t('contact.hours.field')}</p>
-                      <p>{t('contact.hours.closed')}</p>
+                      <p>{settings.contact.weekdays || t('contact.hours.weekdays')}</p>
+                      <p>{settings.contact.field || t('contact.hours.field')}</p>
+                      <p>{settings.contact.closed || t('contact.hours.closed')}</p>
                     </div>
                   </div>
                 </div>
@@ -206,7 +208,7 @@ const Contact: React.FC = () => {
                 나이 제한이 있나요?
               </h3>
               <p className="text-gray-600">
-                주로 14~17세 청소년을 대상으로 하지만, 개별 상황에 따라 유연하게 고려합니다.
+                주로 {settings.contact.studentAge} 청소년을 대상으로 하지만, 개별 상황에 따라 유연하게 고려합니다.
               </p>
             </div>
 

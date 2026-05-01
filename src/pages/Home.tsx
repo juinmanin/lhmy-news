@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, Heart, ArrowRight, Lightbulb as Lighthouse, Globe, Target, Star, GraduationCap, Coffee, Code, Palette } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { cmsService } from '../lib/cms';
 import type { SiteSection } from '../types/cms';
 
@@ -23,6 +24,7 @@ const EnglishIcon = ({ className }: { className?: string }) => (
 
 const Home: React.FC = () => {
   const { t, language } = useLanguage();
+  const settings = useSiteSettings();
   const [siteSections, setSiteSections] = useState<SiteSection[]>([]);
 
   useEffect(() => {
@@ -56,10 +58,10 @@ const Home: React.FC = () => {
   const heroBackgroundImage = heroSection?.image_url || '/image.png';
 
   const stats = [
-    { number: '37+', labelKey: 'home.stats.students', icon: GraduationCap },
-    { number: '5', labelKey: 'home.stats.programs', icon: BookOpen },
-    { number: '8+', labelKey: 'home.stats.volunteers', icon: Users },
-    { number: '2', labelKey: 'home.stats.years', icon: Star },
+    { number: settings.homeStats.students, labelKey: 'home.stats.students', icon: GraduationCap },
+    { number: settings.homeStats.programs, labelKey: 'home.stats.programs', icon: BookOpen },
+    { number: settings.homeStats.volunteers, labelKey: 'home.stats.volunteers', icon: Users },
+    { number: settings.homeStats.years, labelKey: 'home.stats.years', icon: Star },
   ];
 
   const programs = [
@@ -71,6 +73,7 @@ const Home: React.FC = () => {
     },
     {
       titleKey: 'home.programs.practical',
+      title: settings.programs.homePractical,
       descKey: 'home.programs.practical.desc',
       icon: Coffee,
       color: 'from-amber-500 to-orange-500'
@@ -218,7 +221,7 @@ const Home: React.FC = () => {
                     <program.icon className="h-16 w-16 text-white" />
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-blue-800 mb-3">{t(program.titleKey)}</h3>
+                    <h3 className="text-xl font-semibold text-blue-800 mb-3">{program.title || t(program.titleKey)}</h3>
                     <p className="text-gray-600 leading-relaxed">{t(program.descKey)}</p>
                   </div>
                 </div>

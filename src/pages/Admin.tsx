@@ -11,6 +11,7 @@ import {
   Newspaper,
   Plus,
   Save,
+  SlidersHorizontal,
   Trash2,
   Upload,
 } from 'lucide-react';
@@ -22,6 +23,16 @@ import {
   slugify,
 } from '../lib/cms';
 import { supabase } from '../lib/supabase';
+import {
+  createMilestone,
+  createTeamMember,
+  defaultSiteSettings,
+  getSettingsSection,
+  resolveSiteSettings,
+  SITE_SETTINGS_KEY,
+  settingsToSiteSection,
+} from '../lib/siteSettings';
+import type { SiteSettings } from '../lib/siteSettings';
 import type {
   AdminInbox,
   ApplicationRecord,
@@ -32,7 +43,7 @@ import type {
   SiteSection,
 } from '../types/cms';
 
-type AdminTab = 'overview' | 'posts' | 'newsletters' | 'sections' | 'inbox';
+type AdminTab = 'overview' | 'settings' | 'posts' | 'newsletters' | 'sections' | 'inbox';
 
 const statusLabels: Record<PublicationStatus, string> = {
   draft: '초안',
@@ -77,6 +88,7 @@ const Admin: React.FC = () => {
   const [posts, setPosts] = useState<BoardPost[]>([]);
   const [issues, setIssues] = useState<NewsletterIssue[]>([]);
   const [sections, setSections] = useState<SiteSection[]>([]);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
   const [inbox, setInbox] = useState<AdminInbox>({
     studentApplications: [],
     volunteerApplications: [],
@@ -111,12 +123,17 @@ const Admin: React.FC = () => {
       inbox.donations.length,
     [inbox],
   );
+  const editableSections = useMemo(
+    () => sections.filter((section) => section.section_key !== SITE_SETTINGS_KEY),
+    [sections],
+  );
 
   const tabs: { id: AdminTab; label: string; icon: React.ElementType; count?: number }[] = [
     { id: 'overview', label: '대시보드', icon: LayoutDashboard },
+    { id: 'settings', label: '사이트 설정', icon: SlidersHorizontal },
     { id: 'posts', label: '게시판', icon: FileText, count: posts.length },
     { id: 'newsletters', label: '소식지', icon: Newspaper, count: issues.length },
-    { id: 'sections', label: '페이지 문구', icon: Save, count: sections.length },
+    { id: 'sections', label: '페이지 문구', icon: Save, count: editableSections.length },
     { id: 'inbox', label: '신청/후원', icon: Inbox, count: inboxCount },
   ];
 
@@ -155,10 +172,12 @@ const Admin: React.FC = () => {
       setPosts(nextPosts);
       setIssues(nextIssues);
       setSections(nextSections);
+      setSiteSettings(resolveSiteSettings(nextSections));
       setInbox(nextInbox);
+      const nextEditableSections = nextSections.filter((section) => section.section_key !== SITE_SETTINGS_KEY);
       setSelectedPost(nextPosts[0] || emptyBoardPost());
       setSelectedIssue(nextIssues[0] || emptyNewsletterIssue());
-      setSelectedSection(nextSections[0] || {
+      setSelectedSection(nextEditableSections[0] || {
         section_key: 'home.hero',
         title: '',
         body: '',
@@ -298,6 +317,27 @@ const Admin: React.FC = () => {
     }
   };
 
+  const saveSiteSettings = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      const existing = getSettingsSection(sections);
+      const saved = await cmsService.saveSiteSection(settingsToSiteSection(siteSettings, existing));
+      const nextSections = existing
+        ? sections.map((section) => (
+            section.section_key === SITE_SETTINGS_KEY && section.locale === 'ko' ? saved : section
+          ))
+        : [saved, ...sections];
+      setSections(nextSections);
+      setSiteSettings(resolveSiteSettings(nextSections));
+      flash('사이트 설정이 저장되었습니다.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '사이트 설정 저장에 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const updateInboxStatus = async (table: string, id: string, status: string) => {
     setSaving(true);
     setError('');
@@ -417,6 +457,14 @@ const Admin: React.FC = () => {
                 saving={saving}
               />
             )}
+            {activeTab === 'settings' && (
+              <SiteSettingsManager
+                settings={siteSettings}
+                onChange={setSiteSettings}
+                onSave={saveSiteSettings}
+                saving={saving}
+              />
+            )}
             {activeTab === 'newsletters' && (
               <NewsletterManager
                 issues={issues}
@@ -432,7 +480,7 @@ const Admin: React.FC = () => {
             )}
             {activeTab === 'sections' && (
               <SectionManager
-                sections={sections}
+                sections={editableSections}
                 selectedSection={selectedSection}
                 onSelect={setSelectedSection}
                 onChange={setSelectedSection}
@@ -846,6 +894,250 @@ function SectionManager({ sections, selectedSection, onSelect, onChange, onSave,
           저장
         </button>
       </div>
+    </div>
+  );
+}
+
+interface SiteSettingsManagerProps {
+  settings: SiteSettings;
+  onChange: (settings: SiteSettings) => void;
+  onSave: () => void;
+  saving: boolean;
+}
+
+function SiteSettingsManager({ settings, onChange, onSave, saving }: SiteSettingsManagerProps) {
+  const updateHomeStats = (field: keyof SiteSettings['homeStats'], value: string) => {
+    onChange({ ...settings, homeStats: { ...settings.homeStats, [field]: value } });
+  };
+
+  const updatePrograms = (field: keyof SiteSettings['programs'], value: string) => {
+    onChange({ ...settings, programs: { ...settings.programs, [field]: value } });
+  };
+
+  const updateFootball = (field: keyof SiteSettings['football'], value: string) => {
+    onChange({ ...settings, football: { ...settings.football, [field]: value } });
+  };
+
+  const updateSupport = (field: keyof SiteSettings['support'], value: string) => {
+    onChange({ ...settings, support: { ...settings.support, [field]: value } });
+  };
+
+  const updateContact = (field: keyof SiteSettings['contact'], value: string) => {
+    onChange({ ...settings, contact: { ...settings.contact, [field]: value } });
+  };
+
+  const updateMilestone = (index: number, field: 'year' | 'title', value: string) => {
+    onChange({
+      ...settings,
+      milestones: settings.milestones.map((milestone, milestoneIndex) => (
+        milestoneIndex === index ? { ...milestone, [field]: value } : milestone
+      )),
+    });
+  };
+
+  const updateTeamMember = (index: number, field: 'name' | 'role' | 'description' | 'emoji', value: string) => {
+    onChange({
+      ...settings,
+      team: settings.team.map((member, memberIndex) => (
+        memberIndex === index ? { ...member, [field]: value } : member
+      )),
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">사이트 설정</h2>
+            <p className="mt-1 text-sm text-gray-600">숫자, 운영시간, 팀원, 연혁, 프로그램 상태를 수정합니다.</p>
+          </div>
+          <button onClick={onSave} disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-800 px-5 py-3 font-semibold text-white disabled:opacity-60">
+            <Save className="h-4 w-4" />
+            설정 저장
+          </button>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900 mb-4">홈 숫자</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <label>
+            <span className={labelClass}>교육생</span>
+            <input value={settings.homeStats.students} onChange={(event) => updateHomeStats('students', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>교육프로그램</span>
+            <input value={settings.homeStats.programs} onChange={(event) => updateHomeStats('programs', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>자원봉사자</span>
+            <input value={settings.homeStats.volunteers} onChange={(event) => updateHomeStats('volunteers', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>운영 연수</span>
+            <input value={settings.homeStats.years} onChange={(event) => updateHomeStats('years', event.target.value)} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900 mb-4">프로그램 상태</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <label>
+            <span className={labelClass}>홈 실용 기술 제목</span>
+            <input value={settings.programs.homePractical} onChange={(event) => updatePrograms('homePractical', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>바리스타 과정</span>
+            <input value={settings.programs.barista} onChange={(event) => updatePrograms('barista', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>제빵 과정</span>
+            <input value={settings.programs.baking} onChange={(event) => updatePrograms('baking', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>미용 과정</span>
+            <input value={settings.programs.hair} onChange={(event) => updatePrograms('hair', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>요리 과정</span>
+            <input value={settings.programs.cuisine} onChange={(event) => updatePrograms('cuisine', event.target.value)} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900 mb-4">축구팀</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <label>
+            <span className={labelClass}>현재 선수</span>
+            <input value={settings.football.currentPlayers} onChange={(event) => updateFootball('currentPlayers', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>설립 연도</span>
+            <input value={settings.football.foundedYear} onChange={(event) => updateFootball('foundedYear', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>목표 연도</span>
+            <input value={settings.football.goalsTargetYear} onChange={(event) => updateFootball('goalsTargetYear', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>훈련 일정</span>
+            <input value={settings.football.trainingSchedule} onChange={(event) => updateFootball('trainingSchedule', event.target.value)} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900 mb-4">지원하기 / 연락처</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <label>
+            <span className={labelClass}>지원 대상 나이</span>
+            <input value={settings.support.studentAge} onChange={(event) => updateSupport('studentAge', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>보호자 동의서 문구</span>
+            <input value={settings.support.guardianConsentLabel} onChange={(event) => updateSupport('guardianConsentLabel', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-2">
+            <span className={labelClass}>지원하기 운영시간</span>
+            <input value={settings.support.officeHours} onChange={(event) => updateSupport('officeHours', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>직접 방문 월-금</span>
+            <input value={settings.support.visitWeekdays} onChange={(event) => updateSupport('visitWeekdays', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>직접 방문 토.일</span>
+            <input value={settings.support.visitClosed} onChange={(event) => updateSupport('visitClosed', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>연락처 운영시간 1</span>
+            <input value={settings.contact.weekdays} onChange={(event) => updateContact('weekdays', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>연락처 운영시간 2</span>
+            <input value={settings.contact.field} onChange={(event) => updateContact('field', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>연락처 휴무</span>
+            <input value={settings.contact.closed} onChange={(event) => updateContact('closed', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>연락처 FAQ 나이</span>
+            <input value={settings.contact.studentAge} onChange={(event) => updateContact('studentAge', event.target.value)} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-blue-900">연혁</h3>
+          <button
+            onClick={() => onChange({ ...settings, milestones: [...settings.milestones, createMilestone()] })}
+            className="inline-flex items-center gap-2 rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            연혁 추가
+          </button>
+        </div>
+        <div className="space-y-3">
+          {settings.milestones.map((milestone, index) => (
+            <div key={milestone.id} className="grid grid-cols-1 gap-3 rounded-lg border border-gray-200 p-4 md:grid-cols-[140px_1fr_auto]">
+              <input value={milestone.year} onChange={(event) => updateMilestone(index, 'year', event.target.value)} className={inputClass} placeholder="2026.1" />
+              <input value={milestone.title} onChange={(event) => updateMilestone(index, 'title', event.target.value)} className={inputClass} placeholder="연혁 내용" />
+              <button
+                onClick={() => onChange({ ...settings, milestones: settings.milestones.filter((_item, itemIndex) => itemIndex !== index) })}
+                className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white"
+              >
+                삭제
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-blue-900">우리 팀</h3>
+          <button
+            onClick={() => onChange({ ...settings, team: [...settings.team, createTeamMember()] })}
+            className="inline-flex items-center gap-2 rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            팀원 추가
+          </button>
+        </div>
+        <div className="space-y-4">
+          {settings.team.map((member, index) => (
+            <div key={member.id} className="rounded-lg border border-gray-200 p-4">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-[90px_1fr_1fr_auto]">
+                <input value={member.emoji} onChange={(event) => updateTeamMember(index, 'emoji', event.target.value)} className={inputClass} placeholder="아이콘" />
+                <input value={member.name} onChange={(event) => updateTeamMember(index, 'name', event.target.value)} className={inputClass} placeholder="이름" />
+                <input value={member.role} onChange={(event) => updateTeamMember(index, 'role', event.target.value)} className={inputClass} placeholder="역할" />
+                <button
+                  onClick={() => onChange({ ...settings, team: settings.team.filter((_item, itemIndex) => itemIndex !== index) })}
+                  className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white"
+                >
+                  삭제
+                </button>
+              </div>
+              <textarea
+                value={member.description}
+                onChange={(event) => updateTeamMember(index, 'description', event.target.value)}
+                className={`${inputClass} mt-3 min-h-20`}
+                placeholder="소개"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button onClick={onSave} disabled={saving} className="inline-flex items-center gap-2 rounded-lg bg-blue-800 px-5 py-3 font-semibold text-white disabled:opacity-60">
+        <Save className="h-4 w-4" />
+        설정 저장
+      </button>
     </div>
   );
 }

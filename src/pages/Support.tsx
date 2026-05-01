@@ -1,9 +1,26 @@
 import React from 'react';
 import { User, Users, Heart, Mail, Phone, Clock, MapPin } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const Support: React.FC = () => {
   const { t } = useLanguage();
+  const settings = useSiteSettings();
+  const studentInfo = `${settings.support.studentAge} 난민 청소년을 대상으로 한 무료 교육 프로그램에 참여하실 수 있습니다.`;
+  const studentRequirements = `신청 자격:
+• 나이: ${settings.support.studentAge}
+• 신분: 난민 또는 무국적자
+• 거주지: 말레이시아 쿠알라룸푸르 및 인근 지역
+• 학습 의지: 성실한 참여 의지
+
+필요 서류:
+• UNHCR 카드 또는 관련 서류
+• 신분증명서
+• 거주지 증명서
+• ${settings.support.guardianConsentLabel}
+
+신청 방법:
+이메일 또는 전화로 연락 후 면담 진행`;
 
   const supportTypes = [
     {
@@ -65,12 +82,12 @@ const Support: React.FC = () => {
                 </div>
                 
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  {t(support.infoKey)}
+                  {index === 0 ? studentInfo : t(support.infoKey)}
                 </p>
                 
                 <div className="bg-white rounded-lg p-6 border border-gray-200">
                   <pre className="text-gray-700 whitespace-pre-line font-sans leading-relaxed">
-                    {t(support.requirementsKey)}
+                    {index === 0 ? studentRequirements : t(support.requirementsKey)}
                   </pre>
                 </div>
               </div>
@@ -110,7 +127,7 @@ const Support: React.FC = () => {
                 <Clock className="h-6 w-6 text-amber-600 mr-3" />
                 <h3 className="text-lg font-semibold text-blue-800">{t('support.contact.hours')}</h3>
               </div>
-              <p className="text-gray-700 mb-4">{t('support.contact.response')}</p>
+              <p className="text-gray-700 mb-4">{settings.support.officeHours || t('support.contact.response')}</p>
             </div>
           </div>
         </div>
@@ -134,8 +151,8 @@ const Support: React.FC = () => {
                   55100 Kuala Lumpur, Selangor, Malaysia
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                  <p><strong>월-금:</strong> 오후 2시반 - 5시</p>
-                  <p><strong>토.일:</strong> 휴무</p>
+                  <p><strong>월-금:</strong> {settings.support.visitWeekdays}</p>
+                  <p><strong>토.일:</strong> {settings.support.visitClosed}</p>
                 </div>
               </div>
             </div>
