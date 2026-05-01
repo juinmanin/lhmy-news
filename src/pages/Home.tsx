@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, Heart, ArrowRight, Lightbulb as Lighthouse, Globe, Target, Star, GraduationCap, Coffee, Code, Palette } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { cmsService } from '../lib/cms';
+import type { SiteSection } from '../types/cms';
 
 // Custom Korean text icon component
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -20,7 +22,38 @@ const EnglishIcon = ({ className }: { className?: string }) => (
 );
 
 const Home: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [siteSections, setSiteSections] = useState<SiteSection[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    cmsService
+      .listSiteSections()
+      .then((sections) => {
+        if (isMounted) setSiteSections(sections);
+      })
+      .catch(() => {
+        if (isMounted) setSiteSections([]);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const sectionMap = useMemo(() => {
+    const map = new Map<string, SiteSection>();
+    siteSections.forEach((section) => {
+      if (section.locale === language) map.set(section.section_key, section);
+    });
+    return map;
+  }, [language, siteSections]);
+
+  const heroSection = sectionMap.get('home.hero');
+  const heroSubtitleSection = sectionMap.get('home.hero.subtitle');
+  const missionSection = sectionMap.get('home.mission');
+  const heroBackgroundImage = heroSection?.image_url || '/image.png';
 
   const stats = [
     { number: '50+', labelKey: 'home.stats.students', icon: GraduationCap },
@@ -64,7 +97,7 @@ const Home: React.FC = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/image.png)'
+            backgroundImage: `url(${heroBackgroundImage})`
           }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-blue-700/80"></div>
@@ -78,13 +111,13 @@ const Home: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-              {t('home.hero.title')}
+              {heroSection?.title || t('home.hero.title')}
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-100">
-              {t('home.hero.subtitle')}
+              {heroSubtitleSection?.title || heroSubtitleSection?.body || t('home.hero.subtitle')}
             </h2>
             <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-              {t('home.hero.description')}
+              {heroSection?.body || t('home.hero.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -129,10 +162,10 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">
-                {t('home.mission.title')}
+                {missionSection?.title || t('home.mission.title')}
               </h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                {t('home.mission.description')}
+                {missionSection?.body || t('home.mission.description')}
               </p>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">

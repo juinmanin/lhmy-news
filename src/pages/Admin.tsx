@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import {
   CheckCircle,
   FileText,
   Inbox,
+  Image as ImageIcon,
   LayoutDashboard,
   Lock,
   LogOut,
@@ -11,6 +12,7 @@ import {
   Plus,
   Save,
   Trash2,
+  Upload,
 } from 'lucide-react';
 import {
   cmsService,
@@ -40,6 +42,7 @@ const statusLabels: Record<PublicationStatus, string> = {
 
 const inputClass = 'w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500';
 const labelClass = 'block text-sm font-semibold text-gray-700 mb-1';
+const inlineImageMaxBytes = 700 * 1024;
 
 function nowMonth() {
   return new Date().toISOString().slice(0, 7);
@@ -54,6 +57,15 @@ function formatDate(value?: string | null) {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));
+}
+
+function readImageFileAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('이미지 파일을 읽지 못했습니다.'));
+    reader.readAsDataURL(file);
+  });
 }
 
 function isDonation(item: ApplicationRecord | DonationRecord): item is DonationRecord {
@@ -485,6 +497,71 @@ function StatCard({ label, value }: { label: string; value: number }) {
   );
 }
 
+interface ImageUrlFieldProps {
+  label: string;
+  value?: string | null;
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+function ImageUrlField({ label, value, onChange, className = '' }: ImageUrlFieldProps) {
+  const inputId = useId();
+  const [imageError, setImageError] = useState('');
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImageError('');
+    if (!file.type.startsWith('image/')) {
+      setImageError('이미지 파일만 선택할 수 있습니다.');
+      return;
+    }
+    if (file.size > inlineImageMaxBytes) {
+      setImageError('데모 모드에서는 700KB 이하 이미지를 권장합니다. 큰 이미지는 Supabase Storage에 올린 URL을 사용하세요.');
+      return;
+    }
+
+    try {
+      const dataUrl = await readImageFileAsDataUrl(file);
+      onChange(dataUrl);
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : '이미지 URL을 만들지 못했습니다.');
+    } finally {
+      event.target.value = '';
+    }
+  };
+
+  return (
+    <div className={className}>
+      <span className={`${labelClass} flex items-center gap-1`}>
+        <ImageIcon className="h-4 w-4" />
+        {label}
+      </span>
+      <div className="flex flex-col gap-2 md:flex-row">
+        <input value={value || ''} onChange={(event) => onChange(event.target.value)} className={inputClass} placeholder="https://... 또는 이미지 파일 선택" />
+        <input id={inputId} type="file" accept="image/*" onChange={handleFileChange} className="sr-only" />
+        <label
+          htmlFor={inputId}
+          className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+        >
+          <Upload className="h-4 w-4" />
+          파일 선택
+        </label>
+      </div>
+      <p className="mt-1 text-xs text-gray-500">
+        작은 이미지는 자동으로 URL이 만들어집니다. 운영용 큰 이미지는 Supabase Storage나 이미지 호스팅의 공개 URL을 붙여 넣으세요.
+      </p>
+      {imageError && <p className="mt-1 text-sm text-red-600">{imageError}</p>}
+      {value && (
+        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+          <img src={value} alt={`${label} preview`} className="h-48 w-full object-cover" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface PostManagerProps {
   posts: BoardPost[];
   selectedPost: BoardPost;
@@ -538,10 +615,12 @@ function PostManager({ posts, selectedPost, onSelect, onChange, onNew, onSave, o
               {publicationStatuses.map((status) => <option key={status} value={status}>{statusLabels[status]}</option>)}
             </select>
           </label>
-          <label className="md:col-span-2">
-            <span className={labelClass}>대표 이미지 URL</span>
-            <input value={selectedPost.cover_image_url || ''} onChange={(event) => onChange({ ...selectedPost, cover_image_url: event.target.value })} className={inputClass} />
-          </label>
+          <ImageUrlField
+            className="md:col-span-2"
+            label="대표 이미지 URL"
+            value={selectedPost.cover_image_url}
+            onChange={(cover_image_url) => onChange({ ...selectedPost, cover_image_url })}
+          />
           <label className="md:col-span-2">
             <span className={labelClass}>요약</span>
             <textarea value={selectedPost.excerpt} onChange={(event) => onChange({ ...selectedPost, excerpt: event.target.value })} className={`${inputClass} min-h-24`} />
@@ -682,7 +761,11 @@ function NewsletterManager({ issues, selectedIssue, onSelect, onChange, onNew, o
                 </div>
                 <div className="grid grid-cols-1 gap-3">
                   <input value={article.title} onChange={(event) => updateArticle(index, 'title', event.target.value)} className={inputClass} placeholder="기사 제목" />
-                  <input value={article.image_url || ''} onChange={(event) => updateArticle(index, 'image_url', event.target.value)} className={inputClass} placeholder="이미지 URL" />
+                  <ImageUrlField
+                    label="이미지 URL"
+                    value={article.image_url}
+                    onChange={(image_url) => updateArticle(index, 'image_url', image_url)}
+                  />
                   <textarea value={article.body} onChange={(event) => updateArticle(index, 'body', event.target.value)} className={`${inputClass} min-h-36`} placeholder="기사 본문" />
                 </div>
               </div>
@@ -751,10 +834,12 @@ function SectionManager({ sections, selectedSection, onSelect, onChange, onSave,
             <span className={labelClass}>본문</span>
             <textarea value={selectedSection.body} onChange={(event) => onChange({ ...selectedSection, body: event.target.value })} className={`${inputClass} min-h-44`} />
           </label>
-          <label className="md:col-span-2">
-            <span className={labelClass}>이미지 URL</span>
-            <input value={selectedSection.image_url || ''} onChange={(event) => onChange({ ...selectedSection, image_url: event.target.value })} className={inputClass} />
-          </label>
+          <ImageUrlField
+            className="md:col-span-2"
+            label="이미지 URL"
+            value={selectedSection.image_url}
+            onChange={(image_url) => onChange({ ...selectedSection, image_url })}
+          />
         </div>
         <button onClick={onSave} disabled={saving} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-800 px-5 py-3 font-semibold text-white disabled:opacity-60">
           <Save className="h-4 w-4" />
