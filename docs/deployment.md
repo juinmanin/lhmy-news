@@ -41,6 +41,12 @@ Cafe24 path: `나의 서비스 관리 > 도메인 관리 > DNS 관리`
 - `www.lhmy.kr`: CNAME to `velvety-licorice-39e58f.netlify.app`
 - `lhmy.kr`: A record to Netlify fallback IP `75.2.60.5`
 
+Current check on 2026-05-01:
+
+- `lhmy.kr` resolves to `222.122.39.84`, not Netlify.
+- `www.lhmy.kr` is a CNAME to `majestic-banoffee-cc4c85.netlify.app`, not the current Netlify project.
+- `https://lhmy.kr` did not connect, and `https://www.lhmy.kr` failed certificate trust validation.
+
 Important Cafe24 notes:
 
 - Cafe24 DNS changes are available only when the domain uses Cafe24 nameservers.
