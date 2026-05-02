@@ -44,7 +44,7 @@ import type {
   SiteSection,
 } from '../types/cms';
 
-type AdminTab = 'overview' | 'settings' | 'posts' | 'newsletters' | 'sections' | 'inbox';
+type AdminTab = 'overview' | 'settings' | 'images' | 'posts' | 'newsletters' | 'sections' | 'inbox';
 
 const statusLabels: Record<PublicationStatus, string> = {
   draft: '초안',
@@ -122,6 +122,7 @@ const Admin: React.FC = () => {
   const tabs: { id: AdminTab; label: string; icon: React.ElementType; count?: number }[] = [
     { id: 'overview', label: '대시보드', icon: LayoutDashboard },
     { id: 'settings', label: '사이트 설정', icon: SlidersHorizontal },
+    { id: 'images', label: '사진 관리', icon: ImageIcon },
     { id: 'posts', label: '게시판', icon: FileText, count: posts.length },
     { id: 'newsletters', label: '소식지', icon: Newspaper, count: issues.length },
     { id: 'sections', label: '페이지 문구', icon: Save, count: editableSections.length },
@@ -456,6 +457,9 @@ const Admin: React.FC = () => {
                 saving={saving}
               />
             )}
+            {activeTab === 'images' && (
+              <ImageManager />
+            )}
             {activeTab === 'newsletters' && (
               <NewsletterManager
                 issues={issues}
@@ -475,6 +479,13 @@ const Admin: React.FC = () => {
                 selectedSection={selectedSection}
                 onSelect={setSelectedSection}
                 onChange={setSelectedSection}
+                onNew={() => setSelectedSection({
+                  section_key: 'donate.hero',
+                  title: '',
+                  body: '',
+                  locale: 'ko',
+                  image_url: '',
+                })}
                 onSave={saveSection}
                 saving={saving}
               />
@@ -629,6 +640,92 @@ function ImageUrlField({ label, value, onChange, className = '' }: ImageUrlField
           <img src={value} alt={`${label} preview`} className="h-48 w-full object-cover" />
         </div>
       )}
+    </div>
+  );
+}
+
+function ImageManager() {
+  const [selectedUrl, setSelectedUrl] = useState('');
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h2 className="text-xl font-bold text-blue-900">사진 관리 / 반영 방법</h2>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          사진은 업로드만으로 화면이 바뀌지 않습니다. 업로드 후 URL을 어느 위치에 쓸지 지정하고, 해당 글이나 페이지 문구를 저장해야 실제 페이지에 반영됩니다.
+        </p>
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-lg border border-blue-100 bg-blue-50 p-4">
+            <p className="font-bold text-blue-900">1. 사진 업로드</p>
+            <p className="mt-2 text-sm text-gray-700">아래 사진 업로드 버튼으로 이미지를 올리면 URL이 자동 생성됩니다.</p>
+          </div>
+          <div className="rounded-lg border border-amber-100 bg-amber-50 p-4">
+            <p className="font-bold text-amber-900">2. 사용할 위치 선택</p>
+            <p className="mt-2 text-sm text-gray-700">홈 첫 화면은 페이지 문구의 <b>home.hero</b>, 후원 첫 화면은 <b>donate.hero</b> 이미지 URL에 넣습니다.</p>
+          </div>
+          <div className="rounded-lg border border-green-100 bg-green-50 p-4">
+            <p className="font-bold text-green-900">3. 저장</p>
+            <p className="mt-2 text-sm text-gray-700">페이지 문구, 게시글, 소식지 각각의 저장 버튼을 눌러야 공개 페이지가 바뀝니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <ImageUrlField
+          label="사진 업로드 / 기존 사진 선택"
+          value={selectedUrl}
+          onChange={setSelectedUrl}
+        />
+        {selectedUrl && (
+          <div className="mt-4 rounded-lg bg-gray-50 p-4">
+            <p className="text-sm font-semibold text-gray-700">선택한 사진 URL</p>
+            <code className="mt-2 block break-all rounded bg-white p-3 text-sm text-blue-800">{selectedUrl}</code>
+            <p className="mt-3 text-sm text-gray-600">
+              이 URL을 복사해서 <b>페이지 문구</b> 탭의 이미지 URL, <b>게시판</b> 대표 이미지 URL, 또는 <b>소식지</b> 기사 이미지 URL에 넣으면 됩니다.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900">어디를 수정해야 하나요?</h3>
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-200">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-gray-50 text-gray-700">
+              <tr>
+                <th className="px-4 py-3">바꾸고 싶은 곳</th>
+                <th className="px-4 py-3">관리자 위치</th>
+                <th className="px-4 py-3">섹션 키 / 입력칸</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              <tr>
+                <td className="px-4 py-3">홈 첫 화면 큰 사진</td>
+                <td className="px-4 py-3">페이지 문구</td>
+                <td className="px-4 py-3"><code>home.hero</code>의 이미지 URL</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3">후원하기 첫 화면 사진</td>
+                <td className="px-4 py-3">페이지 문구</td>
+                <td className="px-4 py-3"><code>donate.hero</code>의 이미지 URL</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3">소식 게시글 사진</td>
+                <td className="px-4 py-3">게시판</td>
+                <td className="px-4 py-3">대표 이미지 URL</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3">소식지 기사 사진</td>
+                <td className="px-4 py-3">소식지</td>
+                <td className="px-4 py-3">각 기사 이미지 URL</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 text-sm text-red-700">
+          주의: 사진 업로드 후에도 저장 버튼을 누르지 않으면 페이지에는 반영되지 않습니다.
+        </p>
+      </div>
     </div>
   );
 }
@@ -866,14 +963,19 @@ interface SectionManagerProps {
   selectedSection: SiteSection;
   onSelect: (section: SiteSection) => void;
   onChange: (section: SiteSection) => void;
+  onNew: () => void;
   onSave: () => void;
   saving: boolean;
 }
 
-function SectionManager({ sections, selectedSection, onSelect, onChange, onSave, saving }: SectionManagerProps) {
+function SectionManager({ sections, selectedSection, onSelect, onChange, onNew, onSave, saving }: SectionManagerProps) {
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[320px_1fr]">
       <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200">
+        <button onClick={onNew} className="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-800 px-4 py-3 font-semibold text-white">
+          <Plus className="h-4 w-4" />
+          새 페이지 문구
+        </button>
         <div className="space-y-2">
           {sections.map((section) => (
             <button
@@ -947,6 +1049,10 @@ function SiteSettingsManager({ settings, onChange, onSave, saving }: SiteSetting
 
   const updateContact = (field: keyof SiteSettings['contact'], value: string) => {
     onChange({ ...settings, contact: { ...settings.contact, [field]: value } });
+  };
+
+  const updateDonate = (field: keyof SiteSettings['donate'], value: string) => {
+    onChange({ ...settings, donate: { ...settings.donate, [field]: value } });
   };
 
   const updateMilestone = (index: number, field: 'year' | 'title', value: string) => {
@@ -1090,6 +1196,51 @@ function SiteSettingsManager({ settings, onChange, onSave, saving }: SiteSetting
           <label>
             <span className={labelClass}>연락처 FAQ 나이</span>
             <input value={settings.contact.studentAge} onChange={(event) => updateContact('studentAge', event.target.value)} className={inputClass} />
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <h3 className="text-lg font-bold text-blue-900 mb-2">후원하기</h3>
+        <p className="mb-4 text-sm text-gray-600">
+          후원하기의 교육생 숫자는 홈 숫자와 항상 같게 표시됩니다. 교육생 숫자는 위의 <b>홈 숫자</b>에서 수정하세요.
+        </p>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <label>
+            <span className={labelClass}>식사 제공</span>
+            <input value={settings.donate.meals} onChange={(event) => updateDonate('meals', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>운영 프로그램</span>
+            <input value={settings.donate.programs} onChange={(event) => updateDonate('programs', event.target.value)} className={inputClass} />
+          </label>
+          <label>
+            <span className={labelClass}>자원봉사자</span>
+            <input value={settings.donate.volunteers} onChange={(event) => updateDonate('volunteers', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>월 10,000원</span>
+            <input value={settings.donate.amount10000} onChange={(event) => updateDonate('amount10000', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>월 50,000원</span>
+            <input value={settings.donate.amount50000} onChange={(event) => updateDonate('amount50000', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>월 200,000원</span>
+            <input value={settings.donate.amount200000} onChange={(event) => updateDonate('amount200000', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>월 500,000원</span>
+            <input value={settings.donate.amount500000} onChange={(event) => updateDonate('amount500000', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>월 1,000,000원</span>
+            <input value={settings.donate.amount1000000} onChange={(event) => updateDonate('amount1000000', event.target.value)} className={inputClass} />
+          </label>
+          <label className="md:col-span-3">
+            <span className={labelClass}>자유 후원</span>
+            <input value={settings.donate.amountCustom} onChange={(event) => updateDonate('amountCustom', event.target.value)} className={inputClass} />
           </label>
         </div>
       </div>

@@ -39,6 +39,18 @@ export interface ContactSettings {
   studentAge: string;
 }
 
+export interface DonateSettings {
+  meals: string;
+  programs: string;
+  volunteers: string;
+  amount10000: string;
+  amount50000: string;
+  amount200000: string;
+  amount500000: string;
+  amount1000000: string;
+  amountCustom: string;
+}
+
 export interface MilestoneSetting {
   id: string;
   year: string;
@@ -59,6 +71,7 @@ export interface SiteSettings {
   football: FootballSettings;
   support: SupportSettings;
   contact: ContactSettings;
+  donate: DonateSettings;
   milestones: MilestoneSetting[];
   team: TeamMemberSetting[];
 }
@@ -95,6 +108,17 @@ export const defaultSiteSettings: SiteSettings = {
     field: '화.금: 오후5시반~오후7시(운동장)',
     closed: '토.일: 휴무',
     studentAge: '14~17세',
+  },
+  donate: {
+    meals: '1,000+',
+    programs: '5',
+    volunteers: '8+',
+    amount10000: '월 10,000원 → 교육생 1명의 교재비 지원',
+    amount50000: '월 50,000원 → 교육생 1명의 월간 교육비 지원',
+    amount200000: '월 200,000원 → 직업 훈련 프로그램 운영 지원',
+    amount500000: '월 500,000원 → 새로운 교육 프로그램 개발 및 확장',
+    amount1000000: '월 1,000,000원 → 센터 임대료 및 운영비 지원',
+    amountCustom: '원하는 금액으로 자유롭게 후원',
   },
   milestones: [
     { id: '2022-10', year: '2022.10', title: '난민청소년들 미팅' },
@@ -150,6 +174,7 @@ type SettingsRecord = Partial<{
   football: Partial<FootballSettings>;
   support: Partial<SupportSettings>;
   contact: Partial<ContactSettings>;
+  donate: Partial<DonateSettings>;
   milestones: MilestoneSetting[];
   team: TeamMemberSetting[];
 }>;
@@ -171,6 +196,7 @@ export function mergeSiteSettings(settings?: SettingsRecord | null): SiteSetting
     football: { ...defaultSiteSettings.football, ...(settings?.football || {}) },
     support: { ...defaultSiteSettings.support, ...(settings?.support || {}) },
     contact: { ...defaultSiteSettings.contact, ...(settings?.contact || {}) },
+    donate: { ...defaultSiteSettings.donate, ...(settings?.donate || {}) },
     milestones: settings?.milestones?.length ? settings.milestones : defaultSiteSettings.milestones,
     team: settings?.team?.length
       ? settings.team.map((member) => ({ ...member, name: normalizeTeamName(member.name) }))

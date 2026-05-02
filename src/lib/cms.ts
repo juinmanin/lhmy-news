@@ -143,6 +143,14 @@ function seedSections(): SiteSection[] {
       locale: 'ko',
       updated_at: nowIso(),
     },
+    {
+      id: 'donate-hero-ko',
+      section_key: 'donate.hero',
+      title: '후원하기',
+      body: '귀한 후원이 난민 청소년의 미래를 밝힙니다.',
+      locale: 'ko',
+      updated_at: nowIso(),
+    },
   ];
 
   writeLocal(SECTIONS_KEY, seeded);
