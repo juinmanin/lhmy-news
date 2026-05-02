@@ -129,6 +129,20 @@ create index if not exists board_posts_status_published_idx
 create index if not exists newsletter_issues_status_month_idx
   on public.newsletter_issues(status, issue_month desc);
 
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'site-images',
+  'site-images',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+on conflict (id) do update
+set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
 alter table public.profiles enable row level security;
 alter table public.site_sections enable row level security;
 alter table public.board_posts enable row level security;
@@ -216,6 +230,27 @@ create policy "Admins manage profiles"
   on public.profiles for all
   using (public.is_admin())
   with check (public.is_admin());
+
+drop policy if exists "Public can read site images" on storage.objects;
+create policy "Public can read site images"
+  on storage.objects for select
+  using (bucket_id = 'site-images');
+
+drop policy if exists "Editors upload site images" on storage.objects;
+create policy "Editors upload site images"
+  on storage.objects for insert
+  with check (bucket_id = 'site-images' and public.is_admin());
+
+drop policy if exists "Editors update site images" on storage.objects;
+create policy "Editors update site images"
+  on storage.objects for update
+  using (bucket_id = 'site-images' and public.is_admin())
+  with check (bucket_id = 'site-images' and public.is_admin());
+
+drop policy if exists "Editors delete site images" on storage.objects;
+create policy "Editors delete site images"
+  on storage.objects for delete
+  using (bucket_id = 'site-images' and public.is_admin());
 
 drop policy if exists "Editors read contact inquiries" on public.contact_inquiries;
 create policy "Editors read contact inquiries"

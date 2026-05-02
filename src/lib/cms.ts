@@ -4,6 +4,7 @@ import type {
   ApplicationRecord,
   BoardPost,
   DonationRecord,
+  ImageAsset,
   NewsletterArticle,
   NewsletterIssue,
   PublicationStatus,
@@ -13,6 +14,20 @@ import type {
 const POSTS_KEY = 'lhmy_board_posts';
 const NEWSLETTERS_KEY = 'lhmy_newsletter_issues';
 const SECTIONS_KEY = 'lhmy_site_sections';
+const IMAGES_KEY = 'lhmy_uploaded_images';
+const IMAGE_BUCKET = 'site-images';
+
+const defaultImageAssets: ImageAsset[] = [
+  { name: '홈 첫 화면', url: '/lhmy-photos/hero-community.jpg', source: 'default' },
+  { name: '컴퓨터 수업', url: '/lhmy-photos/computer-class.jpg', source: 'default' },
+  { name: '예술 활동', url: '/lhmy-photos/creative-studio.jpg', source: 'default' },
+  { name: '기본 교육', url: '/lhmy-photos/learning-table.jpg', source: 'default' },
+  { name: '공동체 수업', url: '/lhmy-photos/community-session.jpg', source: 'default' },
+  { name: '축구팀', url: '/lhmy-photos/football-awards.jpg', source: 'default' },
+  { name: '단체 사진', url: '/lhmy-photos/big-family.jpg', source: 'default' },
+  { name: '나누는 식탁', url: '/lhmy-photos/shared-meal.jpg', source: 'default' },
+  { name: '발표 세션', url: '/lhmy-photos/presentation.jpg', source: 'default' },
+];
 
 const nowIso = () => new Date().toISOString();
 
@@ -46,6 +61,28 @@ function readLocal<T>(key: string, fallback: T): T {
 function writeLocal<T>(key: string, value: T) {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(key, JSON.stringify(value));
+}
+
+function readFileAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('이미지 파일을 읽지 못했습니다.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function sanitizeFileName(name: string) {
+  const extension = name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const base = name
+    .replace(/\.[^.]+$/, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9가-힣]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 70);
+
+  return `${base || 'image'}.${extension}`;
 }
 
 function seedPosts(): BoardPost[] {
@@ -467,6 +504,75 @@ export const cmsService = {
       .eq('id', id);
 
     if (error) throw error;
+  },
+
+  async listImageAssets(): Promise<ImageAsset[]> {
+    if (!supabase) {
+      return [...defaultImageAssets, ...readLocal<ImageAsset[]>(IMAGES_KEY, [])];
+    }
+
+    const { data, error } = await supabase
+      .storage
+      .from(IMAGE_BUCKET)
+      .list('', {
+        limit: 200,
+        sortBy: { column: 'created_at', order: 'desc' },
+      });
+
+    if (error) {
+      return defaultImageAssets;
+    }
+
+    const uploaded = (data || [])
+      .filter((item) => item.name && !item.name.endsWith('/'))
+      .map((item) => {
+        const { data: publicUrl } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(item.name);
+        return {
+          name: item.name,
+          url: publicUrl.publicUrl,
+          source: 'uploaded' as const,
+          created_at: item.created_at,
+        };
+      });
+
+    return [...defaultImageAssets, ...uploaded];
+  },
+
+  async uploadImageAsset(file: File): Promise<ImageAsset> {
+    if (!file.type.startsWith('image/')) {
+      throw new Error('이미지 파일만 업로드할 수 있습니다.');
+    }
+
+    if (!supabase) {
+      const asset: ImageAsset = {
+        name: file.name,
+        url: await readFileAsDataUrl(file),
+        source: 'uploaded',
+        created_at: nowIso(),
+      };
+      const next = [asset, ...readLocal<ImageAsset[]>(IMAGES_KEY, [])];
+      writeLocal(IMAGES_KEY, next);
+      return asset;
+    }
+
+    const safeName = `${Date.now()}-${sanitizeFileName(file.name)}`;
+    const { error } = await supabase.storage.from(IMAGE_BUCKET).upload(safeName, file, {
+      cacheControl: '31536000',
+      contentType: file.type,
+      upsert: false,
+    });
+
+    if (error) {
+      throw new Error(`이미지 업로드에 실패했습니다. Supabase Storage에 공개 버킷 '${IMAGE_BUCKET}'가 있는지 확인하세요. (${error.message})`);
+    }
+
+    const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(safeName);
+    return {
+      name: safeName,
+      url: data.publicUrl,
+      source: 'uploaded',
+      created_at: nowIso(),
+    };
   },
 };
 

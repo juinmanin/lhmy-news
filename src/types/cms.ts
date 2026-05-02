@@ -81,3 +81,10 @@ export interface AdminInbox {
   partnerApplications: ApplicationRecord[];
   donations: DonationRecord[];
 }
+
+export interface ImageAsset {
+  name: string;
+  url: string;
+  source: 'default' | 'uploaded';
+  created_at?: string;
+}

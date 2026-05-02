@@ -38,6 +38,7 @@ import type {
   ApplicationRecord,
   BoardPost,
   DonationRecord,
+  ImageAsset,
   NewsletterIssue,
   PublicationStatus,
   SiteSection,
@@ -53,7 +54,6 @@ const statusLabels: Record<PublicationStatus, string> = {
 
 const inputClass = 'w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500';
 const labelClass = 'block text-sm font-semibold text-gray-700 mb-1';
-const inlineImageMaxBytes = 700 * 1024;
 
 function nowMonth() {
   return new Date().toISOString().slice(0, 7);
@@ -68,15 +68,6 @@ function formatDate(value?: string | null) {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));
-}
-
-function readImageFileAsDataUrl(file: File) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ''));
-    reader.onerror = () => reject(new Error('이미지 파일을 읽지 못했습니다.'));
-    reader.readAsDataURL(file);
-  });
 }
 
 function isDonation(item: ApplicationRecord | DonationRecord): item is DonationRecord {
@@ -554,28 +545,36 @@ interface ImageUrlFieldProps {
 
 function ImageUrlField({ label, value, onChange, className = '' }: ImageUrlFieldProps) {
   const inputId = useId();
+  const [assets, setAssets] = useState<ImageAsset[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [imageError, setImageError] = useState('');
+
+  const loadAssets = async () => {
+    try {
+      setAssets(await cmsService.listImageAssets());
+    } catch {
+      setAssets([]);
+    }
+  };
+
+  useEffect(() => {
+    loadAssets();
+  }, []);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setImageError('');
-    if (!file.type.startsWith('image/')) {
-      setImageError('이미지 파일만 선택할 수 있습니다.');
-      return;
-    }
-    if (file.size > inlineImageMaxBytes) {
-      setImageError('데모 모드에서는 700KB 이하 이미지를 권장합니다. 큰 이미지는 Supabase Storage에 올린 URL을 사용하세요.');
-      return;
-    }
-
+    setUploading(true);
     try {
-      const dataUrl = await readImageFileAsDataUrl(file);
-      onChange(dataUrl);
+      const asset = await cmsService.uploadImageAsset(file);
+      onChange(asset.url);
+      setAssets((current) => [asset, ...current.filter((item) => item.url !== asset.url)]);
     } catch (err) {
       setImageError(err instanceof Error ? err.message : '이미지 URL을 만들지 못했습니다.');
     } finally {
+      setUploading(false);
       event.target.value = '';
     }
   };
@@ -587,20 +586,44 @@ function ImageUrlField({ label, value, onChange, className = '' }: ImageUrlField
         {label}
       </span>
       <div className="flex flex-col gap-2 md:flex-row">
-        <input value={value || ''} onChange={(event) => onChange(event.target.value)} className={inputClass} placeholder="https://... 또는 이미지 파일 선택" />
+        <input value={value || ''} onChange={(event) => onChange(event.target.value)} className={inputClass} placeholder="/lhmy-photos/example.jpg 또는 https://..." />
         <input id={inputId} type="file" accept="image/*" onChange={handleFileChange} className="sr-only" />
         <label
           htmlFor={inputId}
-          className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+          className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50 ${uploading ? 'pointer-events-none opacity-60' : ''}`}
         >
           <Upload className="h-4 w-4" />
-          파일 선택
+          {uploading ? '업로드 중' : '사진 업로드'}
         </label>
       </div>
       <p className="mt-1 text-xs text-gray-500">
-        작은 이미지는 자동으로 URL이 만들어집니다. 운영용 큰 이미지는 Supabase Storage나 이미지 호스팅의 공개 URL을 붙여 넣으세요.
+        업로드하면 URL이 자동 입력됩니다. 운영 환경에서는 Supabase Storage의 공개 버킷 site-images에 저장됩니다.
       </p>
       {imageError && <p className="mt-1 text-sm text-red-600">{imageError}</p>}
+      {assets.length > 0 && (
+        <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-gray-700">사진 선택</p>
+            <button type="button" onClick={loadAssets} className="text-xs font-semibold text-blue-700">
+              목록 새로고침
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+            {assets.map((asset) => (
+              <button
+                key={`${asset.source}-${asset.url}`}
+                type="button"
+                onClick={() => onChange(asset.url)}
+                className={`overflow-hidden rounded-lg border bg-white text-left transition hover:border-blue-500 ${value === asset.url ? 'border-blue-700 ring-2 ring-blue-200' : 'border-gray-200'}`}
+                title={asset.url}
+              >
+                <img src={asset.url} alt={asset.name} className="h-20 w-full object-cover" />
+                <span className="block truncate px-2 py-1 text-xs text-gray-600">{asset.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {value && (
         <div className="mt-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
           <img src={value} alt={`${label} preview`} className="h-48 w-full object-cover" />
